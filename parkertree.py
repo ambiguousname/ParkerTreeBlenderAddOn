@@ -5,7 +5,7 @@ from bpy.props import StringProperty, BoolProperty, EnumProperty
 from bpy.types import Operator
 
 #Modified helper function from https://blender.stackexchange.com/questions/31693/how-to-find-if-a-point-is-inside-a-mesh
-def pointInsideMesh(point, obj):
+def point_inside_mesh(point, obj):
     cur = obj.matrix_world.inverted() @ point
     cpom = obj.closest_point_on_mesh(cur)
     vec = cur - cpom[1]
@@ -58,7 +58,7 @@ def get_parker_tree_colors(context, filepath):
     
     selected = bpy.context.selected_objects
     for obj in selected:
-        if obj.name.contains("Parker Tree"):
+        if "Parker Tree" in obj.name:
             tree = obj
     
     if tree == None:
@@ -68,10 +68,37 @@ def get_parker_tree_colors(context, filepath):
     tree_curve = tree.data.splines.active
             
     # Set up the file:
+    f = open(filepath, 'w')
+    f.write("FRAME_ID")
     
+    for p in range(len(tree_curve.points)):
+        i = str(p)
+        f.write(",R_" + i + ",G_" + i + ",B_" + i)
+    f.write("\n")
     
-    
-    #f = open(filepath, 'w')
+    # Now for each frame:
+    for frame in range(scn.frame_start, scn.frame_end, scn.frame_step):
+        scn.frame_set(frame)
+        f.write(str(frame))
+        # Then we go through each point:
+        for p in range(len(tree_curve.points)):
+            i = str(p)
+            
+            # We only want the 3D coordinates:
+            coordinates = tree_curve.points[p].co
+            
+            coordinates_actual = Vector((coordinates[0], coordinates[1], coordinates[2]))
+            # Now we get all objects:
+            for ob in scn.objects:
+                inside_objs = []
+                if hasattr(ob, "active_material") != "NoneType" and point_inside_mesh(coordinates_actual, ob):
+                    inside_objs.append(ob)
+                # We sort the list alphabetically, whichever's highest we use the color of:
+                inside_objs.sort()
+                col = inside_objs[0].active_material.diffuse_color
+                f.write("," + str(col[0]) + "," +  str(col[1]) + "," + str(col[2]))
+        f.write("\n")
+    f.close()
 
 class ImportParkerTree(Operator, ImportHelper):
     """Import this year's parker tree coordinates."""
@@ -92,7 +119,7 @@ class ExportParkerTree(Operator, ExportHelper):
     filename_ext = ".csv"
     
     def execute(self, context):
-        return get_parker_tree_colors(context, self.filepath, self.object_select)
+        return get_parker_tree_colors(context, self.filepath)
 
 
 # Only needed if you want to add into a dynamic menu
@@ -120,4 +147,4 @@ def unregister():
 if __name__ == "__main__":
     register()
     
-    #bpy.ops.parker_tree_colors.load('INVOKE_DEFAULT')
+    bpy.ops.parker_tree_colors.load('INVOKE_DEFAULT')
