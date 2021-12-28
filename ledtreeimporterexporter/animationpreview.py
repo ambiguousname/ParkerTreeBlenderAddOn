@@ -1,7 +1,7 @@
 import bpy
 import bmesh
 import math
-from bpy_extras.io_utils import ImportHelper, ExportHelper
+from bpy_extras.io_utils import ImportHelper
 from mathutils import Vector
 from bpy.types import Operator
 
@@ -77,9 +77,9 @@ def read_led_data(context, filepath):
         cols = row.split(",")
         # Ignore the first row:
         if cols[0] != "FRAME_ID":
-            for i in range(1, math.floor(len(cols)/3)):
+            for i in range(0, math.floor(len(cols)/3)):
                 # Get the color for the first light:
-                actual_position = i * 3
+                actual_position = (i * 3) + 1
                 color = (float(cols[actual_position])/255, float(cols[actual_position + 1])/255, float(cols[actual_position + 2])/255, 1.0)
                 
                 actual_column = int(first_row[actual_position][2:])
@@ -100,17 +100,18 @@ class LoadLEDAnim(Operator, ImportHelper):
     def execute(self, context):
         return read_led_data(context, self.filepath)
 
+def menu_func_import(self, context):
+    self.layout.operator(LoadLEDAnim.bl_idname, text="Import LED Animation")
+
 def register():
     bpy.utils.register_class(LoadLEDAnim)
-    bpy.types.TOPBAR_MT_file_import.append(LoadLEDAnim)
+    bpy.types.TOPBAR_MT_file_import.append(menu_func_import)
 
 
 def unregister():
     bpy.utils.unregister_class(LoadLEDAnim)
-    bpy.types.TOPBAR_MT_file_import.remove(LoadLEDAnim)
+    bpy.types.TOPBAR_MT_file_import.remove(menu_func_import)
 
 
 if __name__ == "__main__":
     register()
-    
-    bpy.ops.led_data.load('INVOKE_DEFAULT')

@@ -4,12 +4,6 @@ from bpy_extras.io_utils import ImportHelper, ExportHelper
 from bpy.props import StringProperty, BoolProperty, EnumProperty
 from bpy.types import Operator
 
-bl_info = {
-    "name": "LED Tree Importer/Exporter",
-    "blender": (3, 0, 0),
-    "category": "Object",
-}
-
 #Modified helper function from https://blender.stackexchange.com/questions/31693/how-to-find-if-a-point-is-inside-a-mesh
 def point_inside_mesh(point, obj):
     cur = obj.matrix_world.inverted() @ point
@@ -159,9 +153,3 @@ def unregister():
     bpy.types.TOPBAR_MT_file_import.remove(menu_func_import)
     bpy.utils.unregister_class(ExportParkerTree)
     bpy.types.TOPBAR_MT_file_export.remove(menu_func_export)
-
-
-if __name__ == "__main__":
-    register()
-    
-    bpy.ops.parker_tree_colors.load('INVOKE_DEFAULT')
