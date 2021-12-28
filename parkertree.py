@@ -77,9 +77,9 @@ def get_parker_tree_colors(context, filepath):
     f.write("\n")
     
     # Now for each frame:
-    for frame in range(scn.frame_start, scn.frame_end, scn.frame_step):
+    for frame in range(scn.frame_start, scn.frame_end + 1, scn.frame_step):
         scn.frame_set(frame)
-        f.write(str(frame))
+        f.write(str(frame - 1))
         # Then we go through each point:
         for p in range(len(tree_curve.points)):
             i = str(p)
@@ -94,12 +94,12 @@ def get_parker_tree_colors(context, filepath):
                 if ob.type == 'MESH' and hasattr(ob, "active_material") and point_inside_mesh(coordinates_actual, ob):
                     inside_objs.append(ob)
                 
+                col = (0, 0, 0)
                 if len(inside_objs) > 0:
-                    # We sort the list alphabetically, whichever's highest we use the color of:
-                    inside_objs.sort()
-                    col = inside_objs[0].active_material.diffuse_color
-                else:
-                    col = (0, 0, 0)
+                    # Average all the colors the point is inside:
+                    for inside in inside_objs:
+                        col += inside.active_material.diffuse_color
+                    col = col / len(inside_objs)
                     
                 # Now we multiply the colors by 255, because that's what the CSV takes:
                 f.write("," + str(col[0] * 255) + "," +  str(col[1] * 255) + "," + str(col[2] * 255))
