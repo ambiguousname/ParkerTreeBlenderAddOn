@@ -110,7 +110,8 @@ def get_parker_tree_colors(context, filepath):
                     
                 # Now we multiply the colors by 255, because that's what the CSV takes:
                 f.write("," + str(int(col[0] * 255)) + "," +  str(int(col[1] * 255)) + "," + str(int(col[2] * 255)))
-        f.write("\n")
+        if frame != scn.frame_end:
+            f.write("\n")
     f.close()
     
     return {'FINISHED'}
