@@ -82,11 +82,9 @@ def read_led_data(context, filepath):
                 actual_position = i * 3
                 color = (float(cols[actual_position])/255, float(cols[actual_position + 1])/255, float(cols[actual_position + 2])/255, 1.0)
                 
-                print(color, " ", actual_position, " ", cols[0])
                 actual_column = int(first_row[actual_position][2:])
                 light_arr[actual_column].active_material.diffuse_color = color
                 light_arr[actual_column].active_material.keyframe_insert(data_path = "diffuse_color", frame=int(cols[0]))
-            break
     return {'FINISHED'}
             
     
