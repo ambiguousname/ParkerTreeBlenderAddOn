@@ -2,7 +2,7 @@ bl_info = {
     "name": "LED Tree Importer/Exporter",
     "author": "ambiguousname",
     "blender": (3, 0, 0),
-    "version": (1, 0, 0),
+    "version": (1, 0, 1),
     "support": 'COMMUNITY',
     "description": "Import a .CSV of positions, export as a .CSV of colors at different frames",
     "warning": "With the exception of importing the LED tree, you should have the tree selected when importing/exporting data.",
