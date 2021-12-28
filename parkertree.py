@@ -102,7 +102,7 @@ def get_parker_tree_colors(context, filepath):
                     col = col / len(inside_objs)
                     
                 # Now we multiply the colors by 255, because that's what the CSV takes:
-                f.write("," + str(col[0] * 255) + "," +  str(col[1] * 255) + "," + str(col[2] * 255))
+                f.write("," + str(int(col[0] * 255)) + "," +  str(int(col[1] * 255)) + "," + str(int(col[2] * 255)))
         f.write("\n")
     f.close()
     
