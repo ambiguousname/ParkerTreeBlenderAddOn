@@ -90,19 +90,20 @@ def get_parker_tree_colors(context, filepath):
             
             coordinates_actual = Vector((coordinates[0], coordinates[1], coordinates[2]))
             # Now we get all objects:
+            
+            inside_objs = []
             for ob in scn.objects:
-                inside_objs = []
                 if ob.type == 'MESH' and hasattr(ob, "active_material") and point_inside_mesh(coordinates_actual, ob):
                     inside_objs.append(ob)
                 
-                col = (0, 0, 0)
-                if len(inside_objs) > 0:
-                    # Average all the colors the point is inside:
-                    for inside in inside_objs:
-                        get_color = (inside.active_material.diffuse_color[0], inside.active_material.diffuse_color[1], inside.active_material.diffuse_color[2])
-                        col = (col[0] + get_color[0], col[1] + get_color[1], col[2] + get_color[2])
-                    col = (col[0] * 255 / len(inside_objs), col[1] * 255 / len(inside_objs), col[2] * 255 / len(inside_objs))
-                    
+            col = (0, 0, 0)
+            if len(inside_objs) > 0:
+                # Average all the colors the point is inside:
+                for inside in inside_objs:
+                    get_color = (inside.active_material.diffuse_color[0], inside.active_material.diffuse_color[1], inside.active_material.diffuse_color[2])
+                    col = (col[0] + get_color[0], col[1] + get_color[1], col[2] + get_color[2])    
+                col = (col[0] * 255 / len(inside_objs), col[1] * 255 / len(inside_objs), col[2] * 255 / len(inside_objs))
+                        
             # Now we multiply the colors by 255, because that's what the CSV takes:
             f.write("," + str(int(col[0])) + "," +  str(int(col[1])) + "," + str(int(col[2])))
         if frame != scn.frame_end:
@@ -153,3 +154,8 @@ def unregister():
     bpy.types.TOPBAR_MT_file_import.remove(menu_func_import)
     bpy.utils.unregister_class(ExportParkerTree)
     bpy.types.TOPBAR_MT_file_export.remove(menu_func_export)
+    
+if __name__ == "__main__":
+    register()
+    
+    bpy.ops.parker_tree_colors.load('INVOKE_DEFAULT')
