@@ -68,7 +68,8 @@ def get_parker_tree_colors(context, filepath):
             tree = obj
     
     if tree == None:
-        print("LED tree not found among selected objects")        
+        print("LED tree not found among selected objects")
+        return {'CANCELLED'}
             
     # Get the tree data:
     tree_curve = tree.data.splines.active
