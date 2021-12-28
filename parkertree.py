@@ -91,14 +91,22 @@ def get_parker_tree_colors(context, filepath):
             # Now we get all objects:
             for ob in scn.objects:
                 inside_objs = []
-                if hasattr(ob, "active_material") != "NoneType" and point_inside_mesh(coordinates_actual, ob):
+                if ob.type == 'MESH' and hasattr(ob, "active_material") and point_inside_mesh(coordinates_actual, ob):
                     inside_objs.append(ob)
-                # We sort the list alphabetically, whichever's highest we use the color of:
-                inside_objs.sort()
-                col = inside_objs[0].active_material.diffuse_color
-                f.write("," + str(col[0]) + "," +  str(col[1]) + "," + str(col[2]))
+                
+                if len(inside_objs) > 0:
+                    # We sort the list alphabetically, whichever's highest we use the color of:
+                    inside_objs.sort()
+                    col = inside_objs[0].active_material.diffuse_color
+                else:
+                    col = (0, 0, 0)
+                    
+                # Now we multiply the colors by 255, because that's what the CSV takes:
+                f.write("," + str(col[0] * 255) + "," +  str(col[1] * 255) + "," + str(col[2] * 255))
         f.write("\n")
     f.close()
+    
+    return {'FINISHED'}
 
 class ImportParkerTree(Operator, ImportHelper):
     """Import this year's parker tree coordinates."""
