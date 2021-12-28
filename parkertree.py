@@ -4,6 +4,12 @@ from bpy_extras.io_utils import ImportHelper, ExportHelper
 from bpy.props import StringProperty, BoolProperty, EnumProperty
 from bpy.types import Operator
 
+bl_info = {
+    "name": "LED Tree Importer/Exporter",
+    "blender": (3, 0, 0),
+    "category": "Object",
+}
+
 #Modified helper function from https://blender.stackexchange.com/questions/31693/how-to-find-if-a-point-is-inside-a-mesh
 def point_inside_mesh(point, obj):
     cur = obj.matrix_world.inverted() @ point
@@ -17,12 +23,12 @@ def point_inside_mesh(point, obj):
 
 def read_data(context, filepath):
     #TODO: Fix this to make a grease pencil instead of a path.
-    print("Attempting to import Parker Tree...")
+    print("Attempting to import LED Tree...")
     f = open(filepath, 'r', encoding='utf-8')
     data = f.read()
     f.close()
     
-    tree_mesh = bpy.data.curves.new("Parker Tree", type='CURVE')
+    tree_mesh = bpy.data.curves.new("LED Tree", type='CURVE')
     tree_mesh.dimensions = '3D'
 
     
@@ -42,7 +48,7 @@ def read_data(context, filepath):
         tree_data.points[i].co = (float(n_vert[0]), float(n_vert[1]), float(n_vert[2]), 1)
         i += 1
     
-    tree_obj = bpy.data.objects.new('Parker Tree', tree_mesh)
+    tree_obj = bpy.data.objects.new('LED Tree', tree_mesh)
     scn = bpy.context.scene
     scn.collection.objects.link(tree_obj)
 
@@ -58,11 +64,11 @@ def get_parker_tree_colors(context, filepath):
     
     selected = bpy.context.selected_objects
     for obj in selected:
-        if "Parker Tree" in obj.name:
+        if "LED Tree" in obj.name:
             tree = obj
     
     if tree == None:
-        print("Parker tree not found among selected objects")        
+        print("LED tree not found among selected objects")        
             
     # Get the tree data:
     tree_curve = tree.data.splines.active
@@ -109,9 +115,9 @@ def get_parker_tree_colors(context, filepath):
     return {'FINISHED'}
 
 class ImportParkerTree(Operator, ImportHelper):
-    """Import this year's parker tree coordinates."""
-    bl_idname = "parker_tree_locations.load"  # important since its how bpy.ops.import_test.some_data is constructed
-    bl_label = "Import Coordinates"
+    """Import this year's LED tree coordinates."""
+    bl_idname = "led_tree_locations.load"  # important since its how bpy.ops.import_test.some_data is constructed
+    bl_label = "Import LED Coordinates"
 
     # ImportHelper mixin class uses this
     filename_ext = ".csv"
@@ -120,7 +126,7 @@ class ImportParkerTree(Operator, ImportHelper):
         return read_data(context, self.filepath)
     
 class ExportParkerTree(Operator, ExportHelper):
-    """Export the color the camera gets from parker tree coordinates."""
+    """Export the color the LED tree coordinates detect at each point."""
     bl_idname = "parker_tree_colors.load"
     bl_label = "Export Color CSV"
     
@@ -132,10 +138,10 @@ class ExportParkerTree(Operator, ExportHelper):
 
 # Only needed if you want to add into a dynamic menu
 def menu_func_import(self, context):
-    self.layout.operator(ImportParkerTree.bl_idname, text="Import Parker Tree Coordinates")
+    self.layout.operator(ImportParkerTree.bl_idname, text="Import LED Tree Coordinates")
     
 def menu_func_export(self, context):
-    self.layout.operator(ExportParkerTree.bl_idname, text="Export Parker Tree")
+    self.layout.operator(ExportParkerTree.bl_idname, text="Export Light CSV")
 
 # Register and add to the "file selector" menu (required to use F3 search "Text Import Operator" for quick access)
 def register():
