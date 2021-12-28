@@ -106,11 +106,11 @@ def get_parker_tree_colors(context, filepath):
                     # Average all the colors the point is inside:
                     for inside in inside_objs:
                         get_color = (inside.active_material.diffuse_color[0], inside.active_material.diffuse_color[1], inside.active_material.diffuse_color[2])
-                        col += get_color
-                    col = (col[0] / len(inside_objs), col[1] / len(inside_objs), col[2] / len(inside_objs))
+                        col = (col[0] + get_color[0], col[1] + get_color[1], col[2] + get_color[2])
+                    col = (col[0] * 255 / len(inside_objs), col[1] * 255 / len(inside_objs), col[2] * 255 / len(inside_objs))
                     
             # Now we multiply the colors by 255, because that's what the CSV takes:
-            f.write("," + str(int(col[0] * 255)) + "," +  str(int(col[1] * 255)) + "," + str(int(col[2] * 255)))
+            f.write("," + str(int(col[0])) + "," +  str(int(col[1])) + "," + str(int(col[2])))
         if frame != scn.frame_end:
             f.write("\n")
     f.close()
