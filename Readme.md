@@ -58,16 +58,16 @@ Step 5: Hit space, and watch the animation!
 
 ### **I want to be able to do fancy colors!**
 
-Sorry, the way that the script is currently set up, you can't use Blender's shader nodes. However, the lights will average the colors of the objects they are currently inside of. Do with that what you will.
+Sorry, the way that the script is currently set up, you can't use Blender's shader nodes. However, the lights will average the colors of the objects they are currently inside of. Do with that what you will. I might add some options to mess around with an object's color priority/influence if there's enough demand for it.
 
 ### **The file didn't import/export properly!**
 
 Most of the importing and exporting processes for this add-on require information about the tree's coordinates. Make sure you have those imported and SELECTED in blender before doing any other operations.
 
-### **Is this add-on restricted to trees?**
-
-Absolutely. If you use this for anything else other than making bulbs on a tree change color, I will find you and devour you whole.
-
 ### **There are some LEDs in the preview that turn on when they shouldn't!**
 
 Sorry, that's probably something to do with the collision code messing up. Blender isn't exactly designed for this kind of thing, so I have yet to fix it. If you're really annoyed by it, let me know.
+
+### **Is this add-on restricted to trees?**
+
+Absolutely. If you use this for anything else other than making bulbs on a tree change color, I will find you and devour you whole.
